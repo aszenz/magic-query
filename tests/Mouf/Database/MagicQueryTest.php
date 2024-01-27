@@ -459,10 +459,12 @@ class MagicQueryTest extends TestCase
     public function testSetOutputDialect()
     {
         $magicQuery = new MagicQuery(null, new ArrayCache());
-        $magicQuery->setOutputDialect(new PostgreSqlPlatform());
+        if(\class_exists(PostgreSqlPlatform::class)) {
+            $magicQuery->setOutputDialect(new PostgreSqlPlatform());
 
-        $sql = 'SELECT id FROM users';
-        $this->assertEquals('SELECT "id" FROM "users"', self::simplifySql($magicQuery->buildPreparedStatement($sql)));
+            $sql = 'SELECT id FROM users';
+            $this->assertEquals('SELECT "id" FROM "users"', self::simplifySql($magicQuery->buildPreparedStatement($sql)));
+        }
 
         $magicQuery->setOutputDialect(null);
 
